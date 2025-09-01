@@ -77,3 +77,13 @@ lib/generated_plugin_registrant.dart
 
 # Custom additions
 /oracleJdk-21/
+# Build directories
+/build/
+**/build/
+android/build/
+ios/build/
+
+# Flutter build outputs
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
