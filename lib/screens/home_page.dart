@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
 
 /// Главная страница приложения
@@ -92,19 +93,17 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildWebView() {
     return Container(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: AppColors.cardShadow,
+        border: Border.all(
+          color: AppColors.primaryColor.withOpacity(0.1),
+          width: 1,
+        ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(20.0),
         child: WebViewWidget(controller: _controller),
       ),
     );
@@ -113,40 +112,112 @@ class _HomePageState extends State<HomePage> {
   Widget _buildErrorWidget() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Иконка ошибки
             Container(
-              width: 80,
-              height: 80,
+              width: 96,
+              height: 96,
               decoration: BoxDecoration(
-                color: AppColors.errorColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(40),
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.errorColor.withOpacity(0.1),
+                    AppColors.errorColor.withOpacity(0.05),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(48),
+                border: Border.all(
+                  color: AppColors.errorColor.withOpacity(0.2),
+                  width: 2,
+                ),
               ),
               child: const Icon(
-                Icons.error_outline,
-                size: 48,
+                Icons.wifi_off_outlined,
+                size: 52,
                 color: AppColors.errorColor,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             
             // Текст ошибки
             Text(
-              _errorMessage.isNotEmpty ? _errorMessage : 'Ошибка загрузки страницы',
-              style: const TextStyle(
-                fontSize: 16,
-                color: AppColors.textPrimary,
+              'Ошибка подключения',
+              style: GoogleFonts.inter(
+                fontSize: 20,
                 fontWeight: FontWeight.w500,
+                color: AppColors.textPrimary,
+                letterSpacing: 0.15,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 8),
+            
+            Text(
+              _errorMessage.isNotEmpty 
+                  ? _errorMessage 
+                  : 'Проверьте подключение к интернету',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textSecondary,
+                letterSpacing: 0.25,
+                height: 1.4,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 40),
             
             // Кнопка повторить
-            ElevatedButton.icon(
+            Container(
+              decoration: BoxDecoration(
+                gradient: AppColors.primaryGradient,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: AppColors.cardShadow,
+              ),
+              child: ElevatedButton.icon(
+                onPressed: _retry,
+                icon: const Icon(Icons.refresh_outlined, size: 20),
+                label: Text(
+                  'Повторить попытку',
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: AppColors.textOnPrimary,
+                  elevation: 0,
+                  shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Проверка, можно ли вернуться назад в WebView
+  Future<bool> canGoBack() async {
+    return await _controller.canGoBack();
+  }
+
+  /// Вернуться назад в WebView
+  Future<void> goBack() async {
+    if (await _controller.canGoBack()) {
+      await _controller.goBack();
+    }
+  }
+}
+
               onPressed: _retry,
               icon: const Icon(Icons.refresh),
               label: const Text('Повторить'),
