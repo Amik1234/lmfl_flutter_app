@@ -87,4 +87,3 @@ ios/build/
 /android/app/debug/
 /android/app/profile/
 /android/app/release/
-.env

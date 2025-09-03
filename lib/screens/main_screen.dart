@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
 import '../models/mega_menu_item.dart';
 import '../widgets/mega_menu_widget.dart';
@@ -77,148 +76,59 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   Widget _buildBottomNavigationBar() {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.bottomNavBackground,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        boxShadow: AppColors.elevatedShadow,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex == 2 ? -1 : _selectedIndex,
-          onTap: _onBottomNavTap,
-          backgroundColor: Colors.transparent,
-          selectedItemColor: AppColors.bottomNavSelected,
-          unselectedItemColor: AppColors.bottomNavUnselected,
-          elevation: 0,
-          selectedLabelStyle: GoogleFonts.inter(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex == 2 ? -1 : _selectedIndex, // Не выделяем мега меню
+        onTap: _onBottomNavTap,
+        backgroundColor: AppColors.bottomNavBackground,
+        selectedItemColor: AppColors.bottomNavSelected,
+        unselectedItemColor: AppColors.bottomNavUnselected,
+        elevation: 0,
+        items: [
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Главная',
           ),
-          unselectedLabelStyle: GoogleFonts.inter(
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 0.4,
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.email),
+            label: 'Контакты',
           ),
-          items: [
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 0 
-                      ? AppColors.primaryColor.withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.home_outlined),
+          BottomNavigationBarItem(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: _isMegaMenuVisible 
+                    ? AppColors.primaryColor.withOpacity(0.2)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
               ),
-              activeIcon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.home),
+              child: Icon(
+                Icons.apps,
+                size: 28,
+                color: _isMegaMenuVisible 
+                    ? AppColors.primaryColor 
+                    : AppColors.bottomNavUnselected,
               ),
-              label: 'Главная',
             ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 1 
-                      ? AppColors.primaryColor.withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.contact_mail_outlined),
-              ),
-              activeIcon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.contact_mail),
-              ),
-              label: 'Контакты',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: _isMegaMenuVisible 
-                      ? AppColors.primaryGradient
-                      : null,
-                  color: _isMegaMenuVisible 
-                      ? null
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: _isMegaMenuVisible 
-                      ? AppColors.cardShadow
-                      : null,
-                ),
-                child: Icon(
-                  _isMegaMenuVisible ? Icons.close : Icons.apps_outlined,
-                  size: 28,
-                  color: _isMegaMenuVisible 
-                      ? AppColors.textOnPrimary
-                      : AppColors.bottomNavUnselected,
-                ),
-              ),
-              label: 'Меню',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 3 
-                      ? AppColors.primaryColor.withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.info_outlined),
-              ),
-              activeIcon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.info),
-              ),
-              label: 'О нас',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 4 
-                      ? AppColors.primaryColor.withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.person_outlined),
-              ),
-              activeIcon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.person),
-              ),
-              label: 'Войти',
-            ),
-          ],
-        ),
+            label: 'Меню',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.info),
+            label: 'О нас',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Войти',
+          ),
+        ],
       ),
     );
   }
